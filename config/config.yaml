@@ -1,0 +1,17 @@
+liveness:
+  type: http
+  path: /health
+  port: 80
+  expected_status: 200
+  target_service_address: "localhost"
+  expected_body_regex: ""
+  negate_expected_body_regex: false
+
+readiness:
+  type: http
+  path: /ready
+  port: 80
+  expected_status: 200
+  target_service_address: "localhost"
+  expected_body_regex: ""
+  negate_expected_body_regex: false
