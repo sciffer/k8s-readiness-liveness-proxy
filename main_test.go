@@ -148,12 +148,13 @@ func TestCheckProbe(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			server := httptest.NewServer(tt.handler)
-			defer server.Close()
+		tt.config.TargetServiceAddress = "localhost"
+		// Use httptest.NewServer to dynamically assign a port for each test case
+		server := httptest.NewServer(tt.handler)
+		defer server.Close()
+		tt.config.Port = server.Listener.Addr().(*net.TCPAddr).Port
 
-			tt.config.TargetServiceAddress = "localhost"
-			tt.config.Port = server.Listener.Addr().(*net.TCPAddr).Port
+		t.Run(tt.name, func(t *testing.T) {
 
 			gotSuccess, err := checkProbe(tt.config)
 			if gotSuccess != tt.wantSuccess {
