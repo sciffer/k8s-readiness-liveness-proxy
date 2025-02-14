@@ -1,0 +1,14 @@
+# Basic `dependabot.yml` file with
+# minimum configuration for three package managers
+
+version: 2
+updates:
+  - package-ecosystem: "gomod"
+    directory: "/"
+    groups:
+      golang:
+        applies-to: security-updates
+        patterns:
+          - "golang.org*"
+    schedule:
+      interval: "daily"
