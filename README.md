@@ -1,6 +1,6 @@
 # k8s-readiness-liveness-proxy
 
-[![Build Status](https://via.placeholder.com/150x20/007bff/FFFFFF?text=Build+Status)](https://example.com) <!-- Replace with actual build status badge -->
+[![Build Status](https://via.placeholder.com/150x20/007bff/FFFFFF?text=Build+Status)](https://github.com/sciffer/k8s-readiness-liveness-proxy/actions/workflows/ci.yml/badge.svg?branch=master) <!-- Replace with actual build status badge -->
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Overview
