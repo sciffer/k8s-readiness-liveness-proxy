@@ -1,5 +1,7 @@
 # Use the official Golang base image.
-FROM golang:1.23 AS build
+FROM --platform=$BUILDPLATFORM golang:1.23 AS build
+ARG TARGETOS
+ARG TARGETARCH
 
 # Set the working directory inside the container.
 WORKDIR /app
@@ -12,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go application.
-RUN go build -o main .
+RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o main .
 
 FROM scratch
 
