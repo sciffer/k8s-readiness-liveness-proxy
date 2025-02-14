@@ -48,6 +48,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: |
-            scifferous/k8s-readiness-liveness-proxy:${{ github.event.release.tag_name }}
-            scifferous/k8s-readiness-liveness-proxy:latest
+          tags: ${{ secrets.DOCKERHUB_USER }}/k8s-readiness-liveness-proxy:${{ github.event.release.tag_name }} , ${{ secrets.DOCKERHUB_USER }}/k8s-readiness-liveness-proxy:latest
