@@ -24,6 +24,8 @@ The proxy is configured via a YAML file, typically mounted as a Kubernetes Confi
 Here's an example of the configuration file:
 
 ```yaml
+listen_port: 8080  # The port the proxy will listen on
+
 liveness:
   type: http
   path: /status  # The path on the target application's endpoint to scrape
@@ -47,9 +49,10 @@ readiness:
 
 | Parameter                    | Description                                                                                                                               | Type   | Default |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------- |
+| `listen_port`                | The port the proxy will listen on.                                                                                                        | number | `8080`  |
 | `type`                       | The type of probe. Currently, only `http` is supported.                                                                                   | string | `http`  |
 | `path`                       | The path to request on the target application's endpoint.                                                                                 | string |         |
-| `port`                       | The port to use for the request.                                                                                                         | number |         |
+| `port`                       | The port on the target application to use for the request.                                                                               | number |         |
 | `expected_status`            | The expected HTTP status code.                                                                                                           | number | `200`   |
 | `target_service_address`     | The address of the target service. Use `"localhost"` when running as a sidecar.                                                           | string |         |
 | `expected_body_regex`       | A regular expression to match against the response body. Leave empty to skip body checking.                                               | string | `""`    |
@@ -83,19 +86,19 @@ spec:
             - containerPort: 8088  # Replace with your application's port
           livenessProbe:
             httpGet:
-              path: /livez  #  Liveness probe path exposed by the proxy
-              port: 8080    #  Port the proxy listens on
+              path: /livez  # Liveness probe path exposed by the proxy
+              port: 8080    # Port the proxy listens on (configurable, see above)
           readinessProbe:
             httpGet:
               path: /readyz # Readiness probe path exposed by the proxy
-              port: 8080    # Port the proxy listens on
+              port: 8080    # Port the proxy listens on (configurable, see above)
           volumeMounts:
             - name: config-volume
               mountPath: /app/config  # Mount the config for your app (optional)
         - name: k8s-readiness-liveness-proxy
           image: scifferous/k8s-readiness-liveness-proxy:latest  # Replace with the correct image tag
           ports:
-            - containerPort: 8080 # The port the proxy listens on
+            - containerPort: 8080 # The port the proxy listens on (configurable, see above)
           volumeMounts:
             - name: config-volume
               mountPath: /app/config  # Mount the config for the proxy

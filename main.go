@@ -21,14 +21,28 @@ type ProbeConfig struct {
 }
 
 type Config struct {
-	Liveness  ProbeConfig `yaml:"liveness"`
-	Readiness ProbeConfig `yaml:"readiness"`
+	ListenPort int         `yaml:"listen_port"`
+	Liveness   ProbeConfig `yaml:"liveness"`
+	Readiness  ProbeConfig `yaml:"readiness"`
 }
 
 func loadConfig(path string) (*Config, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
+	}
+
+	// Unmarshal into a map first to handle different config structures
+	var rawConfig map[string]interface{}
+	err = yaml.Unmarshal(data, &rawConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check for the presence of listen_port at the top level
+	_, hasListenPort := rawConfig["listen_port"]
+	if !hasListenPort {
+		return nil, fmt.Errorf("listen_port is required in the config")
 	}
 
 	var config Config
@@ -109,6 +123,10 @@ func main() {
 		}
 	})
 
-	fmt.Println("Starting server on port 8080")
-	http.ListenAndServe(":8080", nil)
+	fmt.Printf("Starting server on port %d\n", config.ListenPort)
+	err = http.ListenAndServe(fmt.Sprintf(":%d", config.ListenPort), nil)
+	if err != nil {
+		fmt.Println("Error starting server:", err)
+		os.Exit(1)
+	}
 }
